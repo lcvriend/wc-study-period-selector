@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Period Selector</title>
+    <link rel="stylesheet" href="https://lcvriend.github.io/wc-multi-selector/static/prism.css">
+    <style>
+        body {
+            max-width: 600px;
+            margin-inline: auto;
+            font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+        }
+        study-period-selector {
+            margin-block: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <h1>Study Period Selector</h1>
+    <p>The <code>StudyPeriodSelector</code> is a web component that allows users to select a study period by specifying a start and end month. It presents a user interface with dropdown menus for selecting the start and end months, buttons to increment or decrement the period length, and a text input for directly entering the number of months. The component supports both Dutch and English month names, adapting based on the specified language attribute.</p>
+    <p>The <code>StudyPeriodSelector</code> provides real-time feedback as users make selections, updating the displayed period and triggering custom events to notify parent components of changes. It enforces logical constraints, such as ensuring the end month is not before the start month, and limits the period to a maximum of 12 months. The component also includes clickable month labels, which can be used for additional functionality like copying month names to the clipboard, though this behavior should be implemented externally.</p>
+    <h2>output</h2>
+    <div>
+        <input type="radio" id="en" name="language" value="en" autocomplete="off">
+        <label for="en">English</label>
+        <input type="radio" id="nl" name="language" value="nl"  autocomplete="off" checked>
+        <label for="nl">Nederlands</label>
+    </div>
+    <study-period-selector src="data/bedragen_2025.json"></study-period-selector>
+    <div id="event-display"><pre><code></code></pre></div>
+    <h2>html</h2>
+    <pre><code class="language-html">&lt!-- html --&gt;
+&lt;study-period-selector&gt;&lt;/study-period-selector&gt;</code></pre>
+
+    <script src="src/selector.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/prism.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        const studyPeriodSelector = document.querySelector("study-period-selector")
+        const eventDisplay = document.getElementById("event-display")
+
+        document.querySelectorAll('input[name="language"]').forEach(radio => {
+            radio.addEventListener("change", (event) => {
+                const selectedValue = event.target.value
+                studyPeriodSelector.setAttribute("language", selectedValue)
+            })
+        })
+
+        studyPeriodSelector.addEventListener("period-change", event => {
+            eventDisplay.querySelector("code").innerText = JSON.stringify(event.detail)
+        })
+
+        studyPeriodSelector.addEventListener("label-click", event => {
+            eventDisplay.querySelector("code").innerText = JSON.stringify(event.detail)
+        })
+
+    </script>
+</body>
+</html>
